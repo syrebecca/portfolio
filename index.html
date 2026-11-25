@@ -63,6 +63,15 @@ nav.overlay a:hover { color: var(--ember); transform: translateX(.2em); }
 /* ---------- scroll reveal ---------- */
 .js .reveal { opacity: 0; transform: translateY(56px); transition: opacity 1.1s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), transform 1.2s cubic-bezier(.2, .7, .2, 1) var(--d, 0s); }
 .js .reveal.in { opacity: 1; transform: none; }
+.noanim, .noanim * { transition: none !important; }
+/* about: words drift in one by one, the photo unveils from the bottom */
+.js .about p.reveal { opacity: 1; transform: none; }
+.js .about .wd { display: inline-block; opacity: 0; filter: blur(8px); transform: translateY(.45em); transition: opacity .9s ease, filter .9s ease, transform 1s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--w) * 24ms + .15s); }
+.js .about .in .wd { opacity: 1; filter: none; transform: none; }
+.js .portrait.reveal { opacity: 1; transform: none; clip-path: inset(100% 0 0 0); transition: clip-path 1.6s cubic-bezier(.7, 0, .2, 1) .1s; }
+.js .portrait.reveal.in { clip-path: inset(0 0 0 0); }
+.js .portrait.reveal img { transform: scale(1.3); transition: transform 2.4s cubic-bezier(.2, .7, .2, 1) .1s; }
+.js .portrait.reveal.in img { transform: none; }
 
 /* ---------- hero ---------- */
 .hero { position: relative; height: 100svh; min-height: 560px; overflow: hidden; }
@@ -428,12 +437,30 @@ const rib = $("#ribbon"); let ribX = 0, ribY = scrollY, boost = 0, ribT = perfor
 const REVEAL = ".about .motto, .about p, .portrait, .ribbon, .journey .sec-label, .j-list li, .contact h2, .contact p, .links, footer, .d-body > *, .d-shots img, .next";
 const revealIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); revealIO.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
 function setupReveal(root) {
+  const host = root.documentElement || root; host.classList.add("noanim");   // hide instantly so a replay starts clean
   root.querySelectorAll(REVEAL).forEach(el => {
     el.classList.add("reveal"); el.classList.remove("in");
     el.style.setProperty("--d", `${([...el.parentNode.children].indexOf(el) % 4) * 90}ms`);
     revealIO.observe(el);
   });
+  void host.offsetWidth; host.classList.remove("noanim");
 }
+// split About text into word spans (keeps inner tags like <b>) so words can drift in one by one
+let wordI = 0;
+function splitWords(el) {
+  [...el.childNodes].forEach(n => {
+    if (n.nodeType === 1) return splitWords(n);
+    if (n.nodeType !== 3 || !n.textContent.trim()) return;
+    const frag = document.createDocumentFragment();
+    n.textContent.split(/(\s+)/).forEach(part => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) return frag.append(part);
+      const w = document.createElement("span"); w.className = "wd"; w.style.setProperty("--w", wordI++); w.textContent = part; frag.append(w);
+    });
+    n.replaceWith(frag);
+  });
+}
+document.querySelectorAll(".about p").forEach(splitWords);
 setupReveal(document);
 
 // ---------- cursor bubble ----------
@@ -542,6 +569,7 @@ function applyRoute() {
   if (next === "home") {
     document.title = "Seyean Park";
     const target = h && document.getElementById(h);
+    if (h === "about") setupReveal(target);                        // replay the About entrance each time it's opened
     const y = target ? (h === "recent" ? works.offsetTop + innerHeight * galleryIndex : target.offsetTop) : (view === "home" ? scrollY : homeY);
     scrollTo({ top: y, behavior: "instant" });
     current = -1; onScroll();
