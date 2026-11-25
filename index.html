@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seyean Park</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Seyean Park: patent attorney (63rd class), blogger and vibe coder.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@100;200;300;400&display=swap">
+<style>
+/* Layout: dark home stage (particle hero → about → ribbon → journey → sticky 3D laptop → contact),
+   plus two light gradient views reached by hash: #work (horizontal gallery) and #work-<slug> (project detail). */
+@property --g1 { syntax: "<color>"; inherits: true; initial-value: #b9a7ff; }
+@property --g2 { syntax: "<color>"; inherits: true; initial-value: #8fb3ff; }
+@property --g3 { syntax: "<color>"; inherits: true; initial-value: #ffc2e9; }
+:root {
+  --night: #08070a;        /* home ground */
+  --paper: #f3ede6;        /* text on night */
+  --dim: #8d8580;          /* secondary text on night */
+  --line: #2a2624;         /* hairlines on night */
+  --ember: #ff6a2b;        /* accent */
+  --mist: #edecf3;         /* light view ground */
+  --ink: #17151a;          /* text on light views */
+  --ink-dim: #5d5a66;
+  --blue: #4153e6;         /* labels on light views */
+  --sans: "Jost", "Futura", "Avenir Next", system-ui, sans-serif;
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--night); color: var(--paper); font: 300 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+:focus-visible { outline: 1px solid var(--ember); outline-offset: 4px; }
+.wrap { padding-left: max(24px, env(safe-area-inset-left, 0px), 4vw); padding-right: max(24px, env(safe-area-inset-right, 0px), 4vw); }
+
+/* ---------- header, menu, cursor, curtain ---------- */
+.hdr { position: fixed; inset: 0 0 auto; z-index: 30; display: flex; justify-content: space-between; align-items: center; padding-top: calc(env(safe-area-inset-top, 0px) + 22px); padding-bottom: 22px; mix-blend-mode: difference; color: #fff; pointer-events: none; }
+.hdr > * { pointer-events: auto; }
+.logo, .menu-btn, .back { font: 400 clamp(22px, 2vw, 30px)/1 var(--serif); text-decoration: none; color: #fff; }
+.menu-btn { background: none; border: 0; cursor: pointer; padding: 6px 0; }
+.back { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: .4em; align-items: center; }
+.back svg { width: 1.1em; }
+nav.overlay { position: fixed; inset: 0; z-index: 25; background: var(--night); display: flex; flex-direction: column; justify-content: center; gap: .6rem; opacity: 0; visibility: hidden; transition: opacity .45s, visibility .45s; }
+nav.overlay.open { opacity: 1; visibility: visible; }
+nav.overlay a { font: 100 clamp(44px, 8.5vw, 116px)/1.05 var(--sans); letter-spacing: .06em; text-decoration: none; text-transform: uppercase; width: max-content; transition: color .2s, transform .3s; }
+nav.overlay a:hover { color: var(--ember); transform: translateX(.2em); }
+.cursor { position: fixed; left: 0; top: 0; z-index: 40; pointer-events: none; }
+.cursor b { display: grid; place-items: center; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 50%; background: #fff; color: #111; font: 400 24px/1 var(--serif); transform: scale(0); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.cursor.on b { transform: scale(1); }
+.curtain { position: fixed; inset: 0; z-index: 35; background: var(--night); opacity: 0; pointer-events: none; transition: opacity .38s ease; }
+.curtain.on { opacity: 1; }
+
+/* ---------- letter reveal ---------- */
+.letters .w { display: inline-block; white-space: nowrap; }
+.letters .ch { display: inline-block; opacity: 0; transform: translateY(.18em); filter: blur(6px); }
+.letters.in .ch { animation: letter .9s cubic-bezier(.2, .7, .2, 1) forwards; animation-delay: calc(var(--i) * 32ms); }
+@keyframes letter { to { opacity: 1; transform: none; filter: none; } }
+
+/* ---------- hero ---------- */
+.hero { position: relative; height: 100svh; min-height: 560px; overflow: hidden; }
+#galaxy { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-text { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 4vh); display: grid; gap: .6rem; }
+.tagline { margin: 0; justify-self: end; font: italic 400 clamp(16px, 1.6vw, 22px)/1.2 var(--serif); }
+h1.hero-title { margin: 0; font: 100 clamp(38px, 7.6vw, 136px)/1 var(--sans); text-transform: uppercase; letter-spacing: .03em; text-wrap: balance; }
+
+/* ---------- about ---------- */
+.about { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 6vw; align-items: center; padding-block: 22vh 14vh; }
+.motto { margin: 0 0 1.2em; font: italic 400 clamp(26px, 2.8vw, 40px)/1.15 var(--serif); color: var(--paper); }
+.about p { margin: 0 0 1.3em; max-width: 36ch; font-size: clamp(18px, 1.75vw, 25px); line-height: 1.55; letter-spacing: .02em; }
+.about p:last-child { margin-bottom: 0; }
+.about b { font-weight: 400; color: var(--ember); }
+.portrait { justify-self: end; width: min(100%, 340px); aspect-ratio: 3 / 4; border-radius: 999px 999px 0 0; border: 1px solid var(--line); display: grid; place-items: center; background: radial-gradient(120% 80% at 50% 100%, #1c1512, var(--night)); }
+.portrait { overflow: hidden; }
+.portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.portrait span { font: 100 clamp(60px, 7vw, 100px)/1 var(--sans); letter-spacing: .1em; color: var(--dim); }
+
+/* ---------- ribbon ---------- */
+.ribbon { border-block: 1px solid var(--line); overflow: hidden; padding-block: 18px; }
+.ribbon-track { display: flex; width: max-content; animation: slide 46s linear infinite; }
+.ribbon-track span { font: 300 clamp(18px, 2vw, 26px)/1 var(--sans); white-space: nowrap; padding-inline: 1.4rem; }
+.ribbon-track span:nth-of-type(odd) { font: italic 400 clamp(20px, 2.2vw, 30px)/1 var(--serif); }
+.ribbon-track i { font-style: normal; color: var(--ember); }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* ---------- section label (shared) ---------- */
+.sec-label { margin: 0; font: italic 400 clamp(24px, 2.4vw, 34px)/1 var(--serif); }
+
+/* ---------- journey ---------- */
+.journey { padding-block: 18vh 10vh; display: grid; gap: 3rem; }
+.j-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.j-list li { display: grid; grid-template-columns: minmax(110px, 1fr) minmax(0, 3fr); gap: 2rem; padding-block: 2rem; border-bottom: 1px solid var(--line); }
+.j-when { font: italic 400 clamp(20px, 1.8vw, 26px)/1.2 var(--serif); color: var(--dim); }
+.j-list h3 { margin: 0 0 .5rem; font: 200 clamp(20px, 2.2vw, 32px)/1.2 var(--sans); text-transform: uppercase; letter-spacing: .06em; text-wrap: balance; }
+.j-list p { margin: 0; max-width: 62ch; color: var(--dim); font-size: clamp(15px, 1.2vw, 18px); }
+
+/* ---------- recent work: sticky 3D laptop ---------- */
+.works { position: relative; }
+.works-stage { position: sticky; top: 0; height: 100svh; display: grid; grid-template-rows: auto 1fr auto; padding-top: calc(env(safe-area-inset-top, 0px) + 90px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 30px); overflow: hidden; }
+.works-head { display: flex; justify-content: space-between; align-items: baseline; }
+.count { font: 100 clamp(30px, 3.4vw, 54px)/1 var(--sans); display: flex; align-items: center; gap: .25em; }
+.roll { display: inline-block; height: 1em; overflow: hidden; line-height: 1; }
+.roll span { display: block; transition: transform .7s cubic-bezier(.7, 0, .2, 1); }
+.roll span i { display: block; font-style: normal; height: 1em; }
+.scene { display: grid; place-items: center; perspective: 1250px; perspective-origin: 50% -35%; min-height: 0; }
+.laptop { --w: min(44vw, 660px, calc((100svh - 300px) * .95)); position: relative; width: var(--w); height: calc(var(--w) * .63); transform-style: preserve-3d; margin-bottom: calc(var(--w) * .46); will-change: transform; }
+.lid { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 50% 100%; will-change: transform; }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: calc(var(--w) * .022) calc(var(--w) * .022) 4px 4px; }
+.laptop { pointer-events: none; }
+.screen-hit { position: absolute; z-index: 2; border-radius: 10px; }
+.screen { display: block; background: #0c0c0e; border: 2px solid #48484d; padding: 2.4% 2.4% 3.2%; text-decoration: none; }
+.screen::before { content: ""; position: absolute; top: 1%; left: 50%; width: 5px; height: 5px; margin-left: -2px; border-radius: 50%; background: #2b2b2f; }
+.shots { position: relative; width: 100%; height: 100%; overflow: hidden; background: #111; border-radius: 2px; }
+.shots img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity .6s; }
+.shots img.on { opacity: 1; }
+.lid-back { transform: rotateY(180deg); background: linear-gradient(160deg, #e2e2e5, #a9a9ae); display: grid; place-items: center; }
+.lid-back span { font: 400 calc(var(--w) * .06)/1 var(--serif); color: #8c8c91; }
+.deck { position: absolute; left: -2.5%; width: 105%; top: 100%; height: calc(var(--w) * .66); transform-origin: 50% 0; transform: rotateX(90deg); background: linear-gradient(#cfcfd3, #b9b9bd 70%, #c7c7cb); border-radius: 6px 6px calc(var(--w) * .03) calc(var(--w) * .03); }
+.keys { position: absolute; left: 9%; right: 9%; top: 7%; height: 42%; background: #2a2a2d; border-radius: 6px; box-shadow: inset 0 0 0 1px #1b1b1d; }
+.pad { position: absolute; left: 31%; right: 31%; top: 56%; height: 36%; border: 1px solid #a2a2a7; border-radius: 8px; }
+.deck-edge { position: absolute; left: -2.5%; width: 105%; top: 100%; height: calc(var(--w) * .028); transform-origin: 50% 0; transform: translateZ(calc(var(--w) * .66)); background: linear-gradient(#b4b4b8, #6d6d72); border-radius: 0 0 calc(var(--w) * .03) calc(var(--w) * .03); }
+.deck-edge::before { content: ""; position: absolute; left: 41%; right: 41%; top: 0; height: 45%; background: #8a8a8f; border-radius: 0 0 6px 6px; }
+.works-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; }
+.w-title { margin: 0; font: 100 clamp(26px, 4vw, 64px)/1.05 var(--sans); text-transform: uppercase; letter-spacing: .12em; }
+.w-title a { text-decoration: none; }
+.w-title a:hover { color: var(--ember); }
+.w-cat { display: block; margin-top: .7rem; font: italic 400 clamp(14px, 1.3vw, 19px)/1 var(--serif); letter-spacing: .2em; text-transform: uppercase; }
+.w-year { font: italic 400 clamp(26px, 3vw, 46px)/1 var(--serif); }
+
+/* ---------- contact ---------- */
+.contact { padding-block: 22vh 8vh; display: grid; gap: 2.2rem; }
+.contact h2 { margin: 0; font: 100 clamp(44px, 9vw, 150px)/1 var(--sans); text-transform: uppercase; letter-spacing: .03em; text-wrap: balance; }
+.contact p { margin: 0; max-width: 42ch; font-size: clamp(18px, 1.6vw, 22px); color: var(--dim); }
+.links { display: flex; flex-wrap: wrap; gap: 1rem 3rem; align-items: center; font: 400 clamp(20px, 2vw, 28px)/1.2 var(--serif); }
+.links a { text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 4px; transition: border-color .2s, color .2s; }
+.links a:hover { color: var(--ember); border-color: var(--ember); }
+.email { display: flex; align-items: center; gap: .8rem; }
+.email span { user-select: all; }
+.copy { background: none; border: 1px solid var(--line); color: var(--dim); font: 300 12px/1 var(--sans); letter-spacing: .15em; text-transform: uppercase; padding: 8px 12px; border-radius: 999px; cursor: pointer; }
+.copy:hover { color: var(--paper); border-color: var(--paper); }
+footer { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-top: 1px solid var(--line); padding-block: 24px calc(env(safe-area-inset-bottom, 0px) + 24px); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+
+/* ---------- light gradient views ---------- */
+.view-light { position: relative; isolation: isolate; min-height: 100svh; color: var(--ink); background: var(--mist); transition: --g1 1.2s, --g2 1.2s, --g3 1.2s; }
+.view-light::before { content: ""; position: fixed; inset: -25%; z-index: -2; background:
+  radial-gradient(38% 34% at 18% 22%, var(--g1), transparent 70%),
+  radial-gradient(42% 38% at 82% 28%, var(--g2), transparent 70%),
+  radial-gradient(48% 42% at 55% 88%, var(--g3), transparent 70%), var(--mist);
+  filter: blur(30px); animation: drift 22s ease-in-out infinite alternate; }
+.view-light::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .45; mix-blend-mode: soft-light;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+@keyframes drift { 0% { transform: rotate(0deg) scale(1); } 100% { transform: rotate(14deg) scale(1.12) translate(3%, -2%); } }
+
+/* gallery (#work) */
+.gallery { height: 100svh; display: grid; grid-template-rows: 1fr auto minmax(0, 1fr); overflow: hidden; }
+.mouse { justify-self: center; align-self: center; width: 30px; height: 50px; border: 1.5px solid var(--ink); border-radius: 16px; position: relative; opacity: .7; margin-top: 40px; }
+.mouse::after { content: ""; position: absolute; left: 50%; top: 9px; width: 2px; height: 8px; margin-left: -1px; background: var(--ink); border-radius: 2px; animation: wheel 1.8s ease-in-out infinite; }
+@keyframes wheel { 0% { opacity: 0; transform: translateY(-3px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(9px); } }
+.track { --cw: min(38vw, 620px); display: flex; gap: 4.5vw; overflow-x: auto; scroll-snap-type: x mandatory; padding-inline: calc(50% - var(--cw) / 2); scrollbar-width: none; padding-block: 10px; }
+.track::-webkit-scrollbar { display: none; }
+.card { flex: 0 0 var(--cw); aspect-ratio: 16 / 10.5; scroll-snap-align: center; overflow: hidden; display: block; box-shadow: 0 30px 60px #2a235022; transform: scale(.9); opacity: .75; transition: transform .7s cubic-bezier(.2, .8, .2, 1), opacity .7s; }
+.card.active { transform: none; opacity: 1; }
+.card img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 1s; }
+.card:hover img { transform: scale(1.04); }
+.g-text { align-self: center; text-align: center; padding-block: 2vh 4vh; display: grid; gap: 1.2rem; justify-items: center; }
+.g-title { margin: 0; font: 400 clamp(46px, 6.4vw, 112px)/1 var(--serif); }
+.g-desc { margin: 0; max-width: 64ch; font: 300 clamp(15px, 1.35vw, 21px)/1.6 var(--sans); letter-spacing: .04em; color: var(--ink); }
+.g-hint { font: 300 12px/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-dim); }
+
+/* detail (#work-<slug>) */
+.d-hero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); gap: 4vw; align-items: center; min-height: 100svh; padding-top: calc(env(safe-area-inset-top, 0px) + 120px); padding-bottom: 6vh; padding-right: 0 !important; }
+.d-left { display: grid; gap: 2.4rem; align-content: center; }
+.d-title { margin: 0; font: 400 clamp(54px, 7.4vw, 132px)/.95 var(--serif); text-wrap: balance; }
+.d-meta { display: grid; grid-template-columns: auto auto; justify-content: start; gap: .6rem 4.5vw; margin: 0; }
+.d-meta dt { font: 300 clamp(20px, 2.2vw, 34px)/1 var(--sans); color: var(--blue); text-transform: uppercase; letter-spacing: .02em; }
+.d-meta dd { margin: 0; font: 300 clamp(20px, 2.2vw, 34px)/1.15 var(--sans); letter-spacing: .04em; }
+.d-meta div { display: grid; gap: .7rem; }
+.live { justify-self: start; display: inline-flex; align-items: center; gap: .9rem; background: #fff; color: var(--ink); text-decoration: none; border-radius: 999px; padding: 1rem 2rem; font: 300 clamp(18px, 1.9vw, 28px)/1 var(--sans); letter-spacing: .02em; text-transform: uppercase; box-shadow: 0 10px 30px #0000000f; transition: transform .3s; }
+.live:hover { transform: translateY(-2px); }
+.live i { width: 9px; height: 9px; border-radius: 50%; background: #3fcf5a; box-shadow: 0 0 0 4px #3fcf5a33; }
+.d-arrow { width: clamp(44px, 5vw, 80px); color: var(--ink); }
+.d-cover { margin: 0; height: min(76svh, 720px); overflow: hidden; box-shadow: 0 30px 80px #2a235033; }
+.d-cover img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.d-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: 2rem 6vw; padding-block: 12vh 8vh; }
+.d-body .sec-label { color: var(--ink); }
+.d-text p { margin: 0 0 1.2em; max-width: 60ch; font: 300 clamp(18px, 1.6vw, 24px)/1.6 var(--sans); letter-spacing: .02em; }
+.stats { display: flex; flex-wrap: wrap; gap: 2rem 5vw; margin-top: 2.4rem; }
+.stats div { display: grid; gap: .3rem; }
+.stats b { font: 400 clamp(40px, 4.6vw, 72px)/1 var(--serif); font-variant-numeric: tabular-nums; }
+.stats span { font: 300 13px/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--ink-dim); }
+.d-credit { margin: 2.4rem 0 0; font: 300 12px/1.4 var(--sans); letter-spacing: .08em; color: var(--ink-dim); }
+.d-shots { display: grid; gap: 6vh; padding-bottom: 10vh; }
+.d-shots img { justify-self: center; width: auto; max-width: 100%; max-height: 92svh; box-shadow: 0 30px 80px #2a235033; }
+.next { display: grid; justify-items: center; gap: 1rem; text-align: center; text-decoration: none; padding-block: 12vh 16vh; border-top: 1px solid #17151a22; }
+.next small { font: 300 13px/1 var(--sans); letter-spacing: .25em; text-transform: uppercase; color: var(--ink-dim); }
+.next span { font: 400 clamp(44px, 6vw, 100px)/1 var(--serif); transition: letter-spacing .5s; }
+.next:hover span { letter-spacing: .02em; }
+
+@media (max-width: 760px) {
+  .about { grid-template-columns: 1fr; padding-block: 14vh 10vh; }
+  .portrait { justify-self: start; width: min(70%, 260px); }
+  .j-list li { grid-template-columns: 1fr; gap: .6rem; }
+  .laptop { --w: 74vw; }
+  .works-foot { flex-direction: column; align-items: flex-start; }
+  .track { --cw: 76vw; }
+  .d-hero { grid-template-columns: 1fr; padding-right: max(24px, env(safe-area-inset-right, 0px)) !important; }
+  .d-cover { height: auto; aspect-ratio: 16 / 10; }
+  .d-body { grid-template-columns: 1fr; }
+  .cursor { display: none; }
+}
+@media (hover: none) { .cursor { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ribbon-track, .view-light::before, .mouse::after { animation: none; }
+  .letters .ch { opacity: 1; transform: none; filter: none; animation: none !important; }
+}
+</style>
+
+<header class="hdr wrap">
+  <a class="logo" href="#top">Seyean.</a>
+  <a class="back" id="back" href="#recent" hidden><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M23 6H1M6 1 1 6l5 5"/></svg>Back.</a>
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+</header>
+<nav class="overlay wrap" id="nav" aria-label="Main">
+  <a href="#top">Home</a>
+  <a href="#about">About</a>
+  <a href="#work">Work</a>
+  <a href="#journey">Journey</a>
+  <a href="#contact">Contact</a>
+</nav>
+<div class="cursor" id="cursor" aria-hidden="true"><b>View Detail</b></div>
+<div class="curtain" id="curtain" aria-hidden="true"></div>
+
+<!-- ===== HOME ===== -->
+<main id="home">
+  <section class="hero" id="top" aria-label="Intro">
+    <canvas id="galaxy" aria-hidden="true"></canvas>
+    <div class="hero-text wrap">
+      <p class="tagline">Patent Attorney, 63rd Class · Blogger · Vibe Coder</p>
+      <h1 class="hero-title">From Idea to Patent to Pixel</h1>
+    </div>
+  </section>
+
+  <section class="about wrap" id="about">
+    <div>
+      <p class="motto">Curious by nature, precise by training.</p>
+      <p>Hi! I'm Seyean Park. I passed the <b>63rd Korean Patent Attorney Examination</b> in October 2026, and I'm finishing my degree in chemical engineering and advanced materials at Konkuk University. Now I'm studying electrical and electronic engineering to work on semiconductor patents.</p>
+      <p>I also run a food blog that I grew with tools I built through vibe coding, and I lead the vibe coding club of my patent attorney class. Off the clock, it's hip-hop, billiards, my first steps in composing, and daily English and Japanese practice toward business fluency.</p>
+    </div>
+    <div class="portrait"><img src="img/profile.jpg" alt="Portrait of Seyean Park"></div>
+  </section>
+
+  <div class="ribbon" aria-label="Patent Attorney, Semiconductor Devices, Vibe Coding, Food Blogging, English and Japanese, Hip-Hop, Billiards">
+    <div class="ribbon-track" id="ribbon" aria-hidden="true"></div>
+  </div>
+
+
+  <section class="works" id="recent" aria-label="Recent work">
+    <div class="works-stage wrap">
+      <div class="works-head"><h2 class="sec-label">Recent Work</h2><span class="count" aria-hidden="true">(<span class="roll" id="r1"></span><span class="roll" id="r2"></span>)</span></div>
+      <div class="scene">
+        <div class="laptop" id="laptop">
+          <div class="lid" id="lid">
+            <div class="face screen" id="screen"><div class="shots" id="shots"></div></div>
+            <div class="face lid-back" aria-hidden="true"><span>S.</span></div>
+          </div>
+          <div class="deck" aria-hidden="true"><div class="keys"></div><div class="pad"></div></div>
+          <div class="deck-edge" aria-hidden="true"></div>
+        </div>
+      </div>
+      <a class="screen-hit" id="screenHit" href="#work" data-cursor aria-label="View detail"></a>
+      <div class="works-foot">
+        <div><h3 class="w-title letters" id="wTitle"></h3><span class="w-cat" id="wCat"></span></div>
+        <span class="w-year" id="wYear"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="journey wrap" id="journey">
+    <h2 class="sec-label">Journey</h2>
+    <ol class="j-list">
+      <li><span class="j-when">Now</span><div><h3>Konkuk University</h3><p>Chemical Engineering, Advanced Materials track with a focus on semiconductor devices. Adding electrical and electronic engineering to move into semiconductor patents.</p></div></li>
+      <li><span class="j-when">2026</span><div><h3>Leader, 63rd Class Vibe Coding Club</h3><p>Running a new assignment or project every session, building working tools with AI.</p></div></li>
+      <li><span class="j-when">Oct 2026</span><div><h3>Passed the 63rd Korean Patent Attorney Examination</h3><p>Finishing my degree before starting practice.</p></div></li>
+      <li><span class="j-when">2026</span><div><h3>Seyeonmon's Yummy Diary</h3><p>Grew a Naver food blog to about 2,500 neighbors in three months, with around 800 visitors a day.</p></div></li>
+      <li><span class="j-when">High School</span><div><h3>Kyunggi Girls' High School</h3><p>Seoul. Founded in 1908 as Korea's first government-run secondary school for girls.</p></div></li>
+      <li><span class="j-when">2016–2018</span><div><h3>KAIST IP-CEO Gifted Education Center, 7th Cohort</h3><p>A two-year program run by KAIST with the Korean Intellectual Property Office for young inventor-entrepreneurs. Filed my own patent application, and trained in invention and IP, future technologies, 3D modeling and entrepreneurship.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="contact wrap" id="contact">
+    <h2>Let's work together</h2>
+    <p>An invention to protect, a story to tell or something to build. Send me a message and let's talk.</p>
+    <div class="links">
+      <span class="email"><span id="emailText">syrebecca@naver.com</span><button class="copy" id="copyBtn" type="button">Copy</button></span>
+      <a href="https://www.instagram.com/sy._.atelier/" target="_blank" rel="noopener">Instagram @sy._.atelier</a>
+      <a href="https://blog.naver.com/syrebecca" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </section>
+  <footer class="wrap"><span>© 2026 Seyean Park</span><span>Patent · Blog · Code</span></footer>
+</main>
+
+<!-- ===== WORK GALLERY ===== -->
+<section class="view-light gallery" id="galleryView" aria-label="Work" hidden>
+  <div class="mouse" aria-hidden="true"></div>
+  <div class="track" id="track"></div>
+  <div class="g-text wrap">
+    <h2 class="g-title letters" id="gTitle"></h2>
+    <p class="g-desc" id="gDesc"></p>
+    <span class="g-hint">Scroll or swipe · Click to open</span>
+  </div>
+</section>
+
+<!-- ===== PROJECT DETAIL ===== -->
+<article class="view-light" id="detailView" hidden>
+  <div class="d-hero wrap">
+    <div class="d-left">
+      <h1 class="d-title letters" id="dTitle"></h1>
+      <dl class="d-meta"><div><dt>Role</dt><dd id="dRole"></dd></div><div><dt>Year</dt><dd id="dYear"></dd></div></dl>
+      <a class="live" id="dLive" target="_blank" rel="noopener"><i></i>Explore live website</a>
+      <svg class="d-arrow" viewBox="0 0 40 60" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 2v54M4 40l16 16 16-16"/></svg>
+    </div>
+    <figure class="d-cover"><img id="dCover" alt=""></figure>
+  </div>
+  <div class="d-body wrap">
+    <h2 class="sec-label">Overview</h2>
+    <div><div class="d-text" id="dText"></div><div class="stats" id="dStats"></div><p class="d-credit" id="dCredit" hidden></p></div>
+  </div>
+  <div class="d-shots wrap" id="dShots"></div>
+  <a class="next wrap" id="dNext"><small>Next project</small><span id="dNextTitle"></span></a>
+</article>
+
+<script>
+// ---------- content: add new projects here (img paths are next to this file) ----------
+const WORKS = [
+  { slug: "claimstack", title: "Claim Stack", cat: "Patent × 3D · Live Site", year: "2026", role: "Designer & Developer",
+    desc: "A live 3D viewer that maps every element of a semiconductor patent claim onto the device it describes.",
+    body: ["Claim Stack rebuilds the gate-all-around transistor in Samsung Electronics' published application KR 10-2024-0040371 as an interactive 3D model. I cross-checked the plan view in Fig. 1 with the I–I′, II–II′ and III–III′ cross-sections in Fig. 2a to reconstruct two gates and the source and drain regions beside them.",
+           "Drag to rotate, or play the six-step explode from the assembled device through the substrate, channel layers, gate and source/drain. Pick any of claims 1 to 10 and click an element to see exactly where it sits. The publication gives no dimensions, so the model follows the drawing proportions, with colors and spacing chosen for readability."],
+    imgs: ["img/claimstack-1.jpg", "img/claimstack-2.jpg", "img/claimstack-3.jpg"], url: "https://syrebecca.github.io/claim-stack/", tint: ["#7ff0dc", "#6fa8ff", "#d2fff4"] },
+  { slug: "claim", title: "Exploded Claim", cat: "Patent × 3D · Semiconductors", year: "2026", role: "Designer & Developer",
+    desc: "A gate-all-around semiconductor patent claim, rebuilt as a 3D model you can pull apart.",
+    body: ["I took a published Samsung Electronics application for a gate-all-around (GAA) transistor, KR 10-2024-0040371, and modeled the device part by part in 3D.",
+           "Scroll and the device explodes layer by layer, from the substrate and channel stack up to the contact plugs. Click any element of claim 1 and the matching part lights up, so the claim language and the structure read side by side."],
+    imgs: ["img/claim-1.jpg", "img/claim-2.jpg", "img/claim-3.jpg"], tint: ["#8ee9ff", "#7c8cff", "#cdf3ff"] },
+  { slug: "blog", title: "Seyeonmon's Yummy Diary", cat: "Food Blog · Naver", year: "2026", role: "Creator & Writer",
+    desc: "A Naver food blog about restaurants, cafés and desserts, grown with writing tools I built myself.",
+    body: ["I started the blog seriously about three months ago. Instead of writing every post from a blank page, I built my own workflow with vibe coding, and it changed how fast the blog could grow.",
+           "It now has about 2,500 neighbors and 600 to 1,500 visitors a day, and scores 95 to 99 on search visibility."],
+    stats: [["2,500", "Neighbors"], ["~800", "Daily visitors"], ["95–99", "Visibility score"]],
+    imgs: ["img/blog-1.jpg", "img/blog-2.jpg"], url: "https://blog.naver.com/syrebecca", tint: ["#ffb8cb", "#ffd9ad", "#f3c8ff"] },
+  { slug: "factory", title: "Blog Draft Factory", cat: "Automation · Claude Code + Playwright", year: "2026", role: "Builder",
+    desc: "My own pipeline that turns photos and a one-line memo into a blog draft, then saves it to Naver for my final review.",
+    body: ["I give it photos, the place details and a one-line memo. It puts the photos in story order, blurs faces and personal information, and writes a draft in my voice with the keywords placed where search needs them.",
+           "Then it stops and shows me a self-review report. Only after I approve does it open Naver with Playwright and save the post as a draft. Publishing is blocked in code, so every post still gets my final read, and each save is double-checked with a screenshot and a full text dump."],
+    imgs: ["img/factory-1.jpg"], tint: ["#ffc9a6", "#e4b9ff", "#aecbff"] },
+  { slug: "billiards", title: "Billiards Path Trainer", cat: "3D Web App · Physics", year: "2026", role: "Designer & Developer",
+    desc: "Set the spin and the thickness of the hit, and see in 3D where the cue ball will go.",
+    body: ["A practice tool for four-ball and three-cushion billiards. I choose the hit point on the cue ball, the thickness of contact and the speed, and the trainer simulates the path across the cushions in 3D.",
+           "Quiz mode asks me to predict the path first and scores the answer, and missed problems go into a review notebook. It also works out the Five-and-a-Half diamond system next to the simulated result."],
+    imgs: ["img/billiards-1.jpg", "img/billiards-2.jpg"], tint: ["#93bbff", "#a3f0cc", "#d8cbff"] },
+  { slug: "club", title: "63rd Vibe Coding Club", cat: "Community · Leadership", year: "2026", role: "Club Leader",
+    desc: "I lead the vibe coding club of the 63rd patent attorney class, with a new assignment or project every session.",
+    body: ["After passing the exam, I started leading a vibe coding club for my class. Every session comes with a new assignment or project, and members build working tools with AI."],
+    imgs: ["img/club-1.jpg"], tint: ["#b8a2ff", "#93b6ff", "#ffc6ea"] },
+  { slug: "kaist", title: "KAIST IP-CEO", cat: "Gifted Education · Invention & IP", year: "2016–2018", role: "Student, 7th Cohort",
+    desc: "Two years at KAIST's program for young inventor-entrepreneurs, where I wrote and filed a patent application of my own.",
+    body: ["The KAIST IP-CEO Center for Creative Entrepreneurs finds and trains young inventor-entrepreneurs with intellectual property at the core. It is run at KAIST and POSTECH, and I completed its two-year regular course as part of the 7th cohort, from 2016 to 2018.",
+           "Online, the course runs on a steady loop: two lectures every two weeks, an assignment, individual feedback from a teaching assistant, then a revised final version. Offline, it is project-based teamwork across future technologies (BT, CT, NT, ST and IT), entrepreneurship and business planning, patent drafting, patent strategy and patent maps, maker work such as 3D printing and prototyping, and mentoring from CEOs and KAIST professors.",
+           "Projects follow the IP-C-E-O model: experts pose an issue, teams turn it into ideas through open discussion, present them for peer review, and keep developing the strongest ones with mentors. That is where I filed my own patent application and first trained in 3D modeling and entrepreneurship."],
+    stats: [["I", "Issue-posting"], ["C", "Collaboration"], ["E", "Elaboration"], ["O", "Outlying"]],
+    imgs: ["img/kaist-1.jpg", "img/kaist-2.jpg", "img/kaist-3.jpg"], pos: "50% 30%", url: "https://ipceo.kaist.ac.kr/61", tint: ["#8fb0ff", "#b6d4ff", "#ffd2a8"] },
+  { slug: "kyunggi", title: "Kyunggi Girls' High School", cat: "High School · Seoul", year: "Graduate", role: "Student",
+    desc: "Korea's first government-run secondary school for girls, founded in 1908.",
+    body: ["Kyunggi Girls' High School opened in 1908 as Hanseong Girls' High School, Korea's first government-run secondary school for girls. It moved to its current campus in Gaepo-dong, Gangnam, Seoul in 1988 and celebrated its 100th anniversary in 2008.",
+           "I graduated from Kyunggi before going on to study chemical engineering and advanced materials at Konkuk University."],
+    stats: [["1908", "Founded"], ["1st", "Government girls' school in Korea"]],
+    credit: "Photo: KANG Yang Hyeon, CC BY-SA 3.0, via Wikimedia Commons",
+    imgs: ["img/kgh-1.jpg"], pos: "50% 72%", tint: ["#9fb6ff", "#e9eefc", "#c7d3ff"] },
+];
+const KEYWORDS = ["Patent Attorney", "Semiconductor Devices", "Vibe Coding", "Food Blogging", "English & Japanese", "Hip-Hop", "Billiards"];
+const $ = s => document.querySelector(s);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
+
+// letter-by-letter reveal; keeps words together so titles still wrap
+function setLetters(el, text) {
+  let i = 0;
+  el.innerHTML = text.split(" ").map(w => `<span class="w">${[...w].map(c => `<span class="ch" style="--i:${i++}">${c}</span>`).join("")}</span>`).join(" ");
+  el.setAttribute("aria-label", text);
+  el.classList.remove("in"); void el.offsetWidth; el.classList.add("in");
+}
+const tint = (el, w) => w.tint.forEach((c, k) => el.style.setProperty(`--g${k + 1}`, c));
+
+// ---------- ribbon, menu, copy ----------
+$("#ribbon").innerHTML = Array(4).fill(KEYWORDS).flat().map(k => `<span>${k}</span><i>·</i>`).join("");
+const nav = $("#nav"), menuBtn = $("#menuBtn");
+const setMenu = open => { nav.classList.toggle("open", open); menuBtn.setAttribute("aria-expanded", open); menuBtn.textContent = open ? "Close" : "Menu"; };
+menuBtn.onclick = () => setMenu(!nav.classList.contains("open"));
+nav.onclick = e => { if (e.target.tagName === "A") setMenu(false); };
+$("#copyBtn").onclick = async e => {
+  const b = e.currentTarget, el = $("#emailText");
+  try { await navigator.clipboard.writeText(el.textContent); b.textContent = "Copied"; }
+  catch { getSelection().selectAllChildren(el); b.textContent = "Selected"; }
+  setTimeout(() => b.textContent = "Copy", 1600);
+};
+
+// ---------- cursor bubble ----------
+const cursor = $("#cursor"); let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy;
+let mouse = false;
+const checkCursor = () => cursor.classList.toggle("on", mouse && !!document.elementFromPoint(tx, ty)?.closest("[data-cursor]"));
+addEventListener("pointermove", e => { tx = e.clientX; ty = e.clientY; mouse = e.pointerType === "mouse"; checkCursor(); });
+addEventListener("scroll", checkCursor, { passive: true });   // content moves under a still pointer
+(function follow() { cx += (tx - cx) * .2; cy += (ty - cy) * .2; cursor.style.transform = `translate(${cx}px,${cy}px)`; requestAnimationFrame(follow); })();
+
+// ---------- home: rolling counter + 3D laptop ----------
+const digitCol = () => `<span>${[...Array(10).keys()].map(d => `<i>${d}</i>`).join("")}</span>`;
+$("#r1").innerHTML = digitCol(); $("#r2").innerHTML = digitCol();
+const roll = (el, d) => el.firstChild.style.transform = `translateY(${-d}em)`;
+$("#shots").innerHTML = WORKS.map(w => `<img src="${w.imgs[0]}" alt="${w.title}" style="object-position:${w.pos || "top"}">`).join("");
+const works = $("#recent"), laptop = $("#laptop"), lid = $("#lid"), wTitle = $("#wTitle"), stage = $(".works-stage"), screenHit = $("#screenHit");
+works.style.height = `${(WORKS.length + 1) * 100}svh`;
+let current = -1, galleryIndex = 0;
+function showWork(i) {
+  if (i === current) return; current = i;
+  const w = WORKS[i];
+  [...$("#shots").children].forEach((img, j) => img.classList.toggle("on", j === i));
+  setLetters(wTitle, w.title);
+  $("#wCat").textContent = w.cat; $("#wYear").textContent = w.year;
+  const n = String(i + 1).padStart(2, "0"); roll($("#r1"), +n[0]); roll($("#r2"), +n[1]);
+}
+function onScroll() {
+  if (home.hidden) return;
+  const r = works.getBoundingClientRect(), vh = innerHeight;
+  showWork(clamp(Math.floor(-r.top / vh), 0, WORKS.length - 1));
+  const t = reduce ? 1 : clamp(1 - r.top / (vh * .75), 0, 1);  // 0 → 1 over the last 3/4 screen before the section locks
+  const e = 1 - Math.pow(1 - t, 3);
+  lid.style.transform = `rotateX(${-90 + e * 94}deg)`;           // closed flat → open, leaning back 4°
+  laptop.style.transform = `translateY(${(1 - e) * 18}vh) scale(${.86 + e * .14})`;
+  const lr = lid.getBoundingClientRect(), sr = stage.getBoundingClientRect();   // keep the flat click area over the open screen
+  Object.assign(screenHit.style, { left: `${lr.left - sr.left}px`, top: `${lr.top - sr.top}px`, width: `${lr.width}px`, height: `${lr.height}px` });
+  screenHit.hidden = e < .7;
+}
+addEventListener("scroll", onScroll, { passive: true }); addEventListener("resize", onScroll);
+screenHit.addEventListener("click", () => { galleryIndex = current; });
+
+// ---------- gallery view ----------
+const galleryView = $("#galleryView"), track = $("#track");
+track.innerHTML = WORKS.map((w, i) => `<a class="card" href="#work-${w.slug}" data-cursor data-i="${i}" aria-label="${w.title}"><img src="${w.imgs[0]}" alt="" style="object-position:${w.pos || "top"}"></a>`).join("");
+const cards = [...track.children];
+let gi = -1, wheelLock = false;
+function setActive(i) {
+  if (i === gi) return; gi = galleryIndex = i;
+  cards.forEach((c, k) => c.classList.toggle("active", k === i));
+  setLetters($("#gTitle"), WORKS[i].title); $("#gDesc").textContent = WORKS[i].desc; tint(galleryView, WORKS[i]);
+}
+function centerCard(i, smooth = true) {
+  const c = cards[i];
+  track.scrollTo({ left: c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2, behavior: smooth && !reduce ? "smooth" : "auto" });
+  setActive(i);
+}
+let scrollT;
+track.addEventListener("scroll", () => { clearTimeout(scrollT); scrollT = setTimeout(() => {
+  const mid = track.scrollLeft + track.clientWidth / 2;
+  let best = 0; cards.forEach((c, k) => { if (Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid) < Math.abs(cards[best].offsetLeft + cards[best].offsetWidth / 2 - mid)) best = k; });
+  setActive(best);
+}, 90); }, { passive: true });
+galleryView.addEventListener("wheel", e => {
+  e.preventDefault();
+  const d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+  if (wheelLock || Math.abs(d) < 6) return;
+  wheelLock = true; setTimeout(() => wheelLock = false, 700);
+  centerCard(clamp(gi + Math.sign(d), 0, WORKS.length - 1));
+}, { passive: false });
+track.addEventListener("click", e => {
+  const c = e.target.closest(".card"); if (!c) return;
+  if (+c.dataset.i !== gi) { e.preventDefault(); centerCard(+c.dataset.i); }   // side cards come to the center first
+});
+
+// ---------- detail view ----------
+const detailView = $("#detailView");
+function renderDetail(i) {
+  const w = WORKS[i], next = WORKS[(i + 1) % WORKS.length];
+  setLetters($("#dTitle"), w.title);
+  $("#dRole").textContent = w.role; $("#dYear").textContent = w.year;
+  $("#dLive").hidden = !w.url; if (w.url) $("#dLive").href = w.url;
+  $("#dCover").src = w.imgs[0]; $("#dCover").alt = `${w.title} image`; $("#dCover").style.objectPosition = w.pos || "top left";
+  $("#dCredit").textContent = w.credit || ""; $("#dCredit").hidden = !w.credit;
+  $("#dText").innerHTML = w.body.map(p => `<p>${p}</p>`).join("");
+  $("#dStats").innerHTML = (w.stats || []).map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("");
+  $("#dShots").innerHTML = w.imgs.slice(1).map(s => `<img src="${s}" alt="${w.title} screenshot" loading="lazy">`).join("");
+  $("#dNext").href = `#work-${next.slug}`; $("#dNextTitle").textContent = next.title;
+  tint(detailView, w);
+  galleryIndex = i;
+}
+
+// ---------- router: #work, #work-<slug>, otherwise home (+ section) ----------
+const home = $("#home"), back = $("#back"), curtain = $("#curtain");
+let view = "home", homeY = 0, first = true;
+function applyRoute() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  const slugI = h.startsWith("work-") ? WORKS.findIndex(w => `work-${w.slug}` === h) : -1;
+  const next = h === "work" ? "gallery" : slugI >= 0 ? "detail" : "home";
+  if (view === "home" && next !== "home") homeY = scrollY;
+  home.hidden = next !== "home"; galleryView.hidden = next !== "gallery"; detailView.hidden = next !== "detail";
+  document.documentElement.style.overflow = next === "gallery" ? "hidden" : "";
+  back.hidden = next === "home"; back.href = next === "detail" ? "#work" : "#recent";
+  if (next === "gallery") { document.title = "Work | Seyean Park"; gi = -1; requestAnimationFrame(() => centerCard(galleryIndex, false)); }
+  if (next === "detail") { renderDetail(slugI); document.title = `${WORKS[slugI].title} | Seyean Park`; scrollTo({ top: 0, behavior: "instant" }); }
+  if (next === "home") {
+    document.title = "Seyean Park";
+    const target = h && document.getElementById(h);
+    const y = target ? (h === "recent" ? works.offsetTop + innerHeight * galleryIndex : target.offsetTop) : (view === "home" ? scrollY : homeY);
+    scrollTo({ top: y, behavior: "instant" });
+    current = -1; onScroll();
+  }
+  view = next; checkCursor();
+}
+function route() {
+  if (first || reduce) { first = false; applyRoute(); return; }
+  curtain.classList.add("on");
+  setTimeout(() => { applyRoute(); requestAnimationFrame(() => curtain.classList.remove("on")); }, 380);
+}
+addEventListener("hashchange", route);
+addEventListener("keydown", e => {
+  if (e.key === "Escape") { if (nav.classList.contains("open")) setMenu(false); else if (view !== "home") location.hash = back.getAttribute("href"); }
+  if (view === "gallery" && (e.key === "ArrowRight" || e.key === "ArrowLeft")) centerCard(clamp(gi + (e.key === "ArrowRight" ? 1 : -1), 0, WORKS.length - 1));
+});
+route();
+
+// ---------- rose particles (parametric rose surface, gently wobbling) ----------
+const cv = $("#galaxy"), ctx = cv.getContext("2d");
+const N = innerWidth < 700 ? 5000 : 10000, P = [], TAU = Math.PI * 2;
+for (let i = 0; i < N; i++) {
+  const th = 4 * Math.PI + 20 * Math.PI * Math.pow(Math.random(), 1.3);   // larger = inner petals; bias toward the open outer ones
+  const x = Math.random() < .45 ? .86 + Math.random() * .14 : .15 + Math.random() * .85;   // 0 = petal base, 1 = rim; rims get extra points so petal edges read
+  const phi = Math.PI / 2 * Math.exp(-th / (8 * Math.PI));
+  const X = 1 - Math.pow(1 - (3.6 * th % TAU) / Math.PI, 4) / 2 + Math.sin(15 * th) / 150;
+  const y = 2 * Math.pow(x * x - x, 2) * Math.sin(phi);
+  const r = X * (x * Math.sin(phi) + y * Math.cos(phi));
+  const inner = (th - 4 * Math.PI) / (20 * Math.PI), rim = Math.pow(x, 7);
+  const alpha = Math.min(1, (.24 + inner * .4 + rim * .38) * (Math.random() * .5 + .6));
+  P.push({ x: r * Math.sin(th), y: r * Math.cos(th), z: .7 * X * (x * Math.cos(phi) - y * Math.sin(phi)), k: Math.random() * TAU, s: Math.random() * 1.8 + 1.1 + rim * .9,
+    a: alpha, q: Math.round(inner * 5) + 6 * Math.round(rim * 2) });
+}
+const sprites = [...Array(18)].map((_, q) => {
+  const inner = (q % 6) / 5, rim = Math.floor(q / 6) / 2, c = document.createElement("canvas"); c.width = c.height = 16;
+  const g = c.getContext("2d"), grad = g.createRadialGradient(8, 8, 0, 8, 8, 8);
+  const col = `${2 + (1 - inner) * 14 + rim * 8},${86 + inner * 12 - rim * 16}%,${34 + inner * 10 + rim * (26 - inner * 10)}%`;
+  grad.addColorStop(0, `hsla(${col},1)`); grad.addColorStop(.45, `hsla(${col},.85)`); grad.addColorStop(1, `hsla(${col},0)`);
+  g.fillStyle = grad; g.fillRect(0, 0, 16, 16); return c;
+});
+let W, H, mx = 0, my = 0, running = true;
+function size() { const d = Math.min(devicePixelRatio || 1, 1.5); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+function draw(t) {
+  t *= .001;
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = "#08070a"; ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = "lighter";
+  const spin = t * .12 + mx * .6, a = 1.15 + my * .2;                 // slow turn; pointer nudges the view
+  const cs = Math.cos(spin), sn = Math.sin(spin), ca = Math.cos(a), sa = Math.sin(a);
+  const S = Math.min(W * .4, H * .5), cx0 = W / 2, cy0 = H * .4, D = 3.2;
+  for (const p of P) {
+    // "흐물흐물": a slow, petal-wide ripple plus a breathing scale
+    const w = Math.sin(t * .9 + p.z * 5 + p.x * 3) * .035 + Math.sin(t * .6 + p.y * 4 + p.k) * .012;
+    const b = 1 + Math.sin(t * .7 + p.z * 2.5) * .03;
+    const px = p.x * b + w, py = p.y * b - w * .6, pz = p.z + Math.sin(t * 1.1 + p.x * 4 + p.y * 3) * .03;
+    const x1 = px * cs - py * sn, y1 = px * sn + py * cs;
+    const up = y1 * sa + pz * ca, depth = y1 * ca - pz * sa + D;
+    const f = S * D / depth;
+    ctx.globalAlpha = p.a;
+    ctx.drawImage(sprites[p.q], cx0 + x1 * f - p.s, cy0 - (up - .3) * f - p.s, p.s * 2, p.s * 2);
+  }
+  if (running && !reduce) requestAnimationFrame(draw);
+}
+size(); addEventListener("resize", () => { size(); if (reduce) draw(0); });
+addEventListener("pointermove", e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+new IntersectionObserver(([e]) => { const was = running; running = e.isIntersecting; if (running && !was && !reduce) requestAnimationFrame(draw); }).observe(cv);
+requestAnimationFrame(draw);
+</script>
+
+</html>
